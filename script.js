@@ -41,7 +41,7 @@
 
   // Function to send tracking data
   function sendTrackingData(trackingData) {
-      fetch('http://localhost:3000/track', {
+      fetch('https://backend-gnew4gw64-saqib-mehmoods-projects-734912ba.vercel.app/track', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
