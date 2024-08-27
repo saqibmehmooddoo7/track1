@@ -41,13 +41,13 @@
 
   // Function to send tracking data
   function sendTrackingData(trackingData) {
-      fetch('https://backend-8eoysop6j-saqib-mehmoods-projects-734912ba.vercel.app', {
+      fetch('https://backend-8eoysop6j-saqib-mehmoods-projects-734912ba.vercel.app/track', {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
           },
           body: JSON.stringify(trackingData),
-          mode: 'no-cors'
+          credentials: 'include' // Ensures cookies are sent with the request
       })
       .then(response => {
           if (!response.ok) {
@@ -80,13 +80,11 @@
   // Function to handle form submission
   function handleFormSubmission(event) {
       event.preventDefault(); // Prevent the default form submission behavior
-
       const formData = new FormData(event.target);
       const formDataObject = {};
       formData.forEach((value, key) => {
           formDataObject[key] = value;
       });
-
       const formSubmissionData = {
           uniqueId: uniqueId,
           url: window.location.href,
@@ -95,9 +93,6 @@
           timestamp: new Date().toISOString()
       };
       sendTrackingData(formSubmissionData);
-
-      // Optionally, you can submit the form normally after tracking
-      // event.target.submit();
   }
 
   // Add event listener for form submission
@@ -119,67 +114,72 @@
 
   // Add event listeners for button clicks
   const contactButton = document.getElementById('contactt');
-  contactButton.addEventListener('click', () => handleButtonClick('contact_button_click'));
+  if (contactButton) {
+      contactButton.addEventListener('click', () => handleButtonClick('contact_button_click'));
+  }
 
   const aboutButton = document.getElementById('abdullbari');
-  aboutButton.addEventListener('click', () => handleButtonClick('about_button_click'));
+  if (aboutButton) {
+      aboutButton.addEventListener('click', () => handleButtonClick('about_button_click'));
+  }
 
   const servicesButton = document.getElementById('saqibbbb');
-  servicesButton.addEventListener('click', () => handleButtonClick('services_button_click'));
+  if (servicesButton) {
+      servicesButton.addEventListener('click', () => handleButtonClick('services_button_click'));
+  }
 
-})();
-// ====================Scroll Section Active Link================//
-let Sections = document.querySelectorAll("section");
-let navLinks = document.querySelectorAll("header nav a");
+  // Scroll Section Active Link and Sticky Navbar
+  let Sections = document.querySelectorAll("section");
+  let navLinks = document.querySelectorAll("header nav a");
+  window.onscroll = () => {
+    Sections.forEach((sec) => {
+      let top = window.scrollY;
+      let offset = sec.offsetTop - 150;
+      let height = sec.offsetHeight;
+      let id = sec.getAttribute("id");
+      if (top >= offset && top < offset + height) {
+        navLinks.forEach((links) => {
+          links.classList.remove("active");
+          document
+            .querySelector(`header nav a[href*="${id}"]`)
+            .classList.add("active");
+        });
+      }
+    });
 
-window.onscroll = () => {
-  Sections.forEach((sec) => {
-    let top = window.scrollY;
-    let offset = sec.offsetTop - 150;
-    let height = sec.offsetHeight;
-    let id = sec.getAttribute("id");
+    // Sticky Navbar
+    let header = document.querySelector("header");
+    header.classList.toggle("sticky", window.scrollY > 100);
 
-    if (top >= offset && top < offset + height) {
-      navLinks.forEach((links) => {
-        links.classList.remove("active");
-        document
-          .querySelector(`header nav a[href*="${id}"]`)
-          .classList.add("active");
-      });
+    // Remove toggle icon and navbar when click navbar link(scroll)
+    let menuIcon = document.querySelector(".menu-icon"); // Ensure menuIcon is defined
+    let navbar = document.querySelector(".navbar"); // Ensure navbar is defined
+    if (menuIcon && navbar) {
+      menuIcon.classList.remove("bx-x");
+      navbar.classList.remove("active");
     }
+  };
+
+  // Scroll Reveal
+  ScrollReveal({
+    distance: "80px",
+    duration: 2000,
+    delay: 200,
   });
-  // ===========================sticky navbar=================//
+  ScrollReveal().reveal(".home-content, .heading", { origin: "top" });
+  ScrollReveal().reveal(
+    ".home-img, .services-container, .portfolio-box, .contact form",
+    { origin: "bottom" }
+  );
+  ScrollReveal().reveal(".home-content h1, .about-img", { origin: "left" });
+  ScrollReveal().reveal(".home-content p, .about-content", { origin: "right" });
 
-  let header = document.querySelector("header");
-  header.classList.toggle("sticky", window.scrollY > 100);
-
-  // ========================Remove toggle icon and navbar when click navbar link(scroll)=================//
-
-  menuIcon.classList.remove("bx-x");
-  navbar.classList.remove("active");
-};
-
-//========================scroll Reveal=================//
-
-ScrollReveal({
-  //   reset: true,
-  distance: "80px",
-  duration: 2000,
-  delay: 200,
-});
-ScrollReveal().reveal(".home-content, .heading", { origin: "top" });
-ScrollReveal().reveal(
-  ".home-img, .services-container, .portfolio-box, .contact form",
-  { origin: "bottom" }
-);
-ScrollReveal().reveal(".home-content h1, .about-img", { origin: "left" });
-ScrollReveal().reveal(".home-content p, .about-content", { origin: "right" });
-
-//========================Typed JS=================//
-const typed = new Typed(".multiple-text", {
-  strings: ["Frontend Developer", "Graphic Designer", "Video Editor"],
-  typeSpeed: 50,
-  backSpeed: 50,
-  backDelay: 1000,
-  loop: true,
-});
+  // Typed JS
+  const typed = new Typed(".multiple-text", {
+    strings: ["Frontend Developer", "Graphic Designer", "Video Editor"],
+    typeSpeed: 50,
+    backSpeed: 50,
+    backDelay: 1000,
+    loop: true,
+  });
+})();
