@@ -46,7 +46,8 @@
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify(trackingData)
+          body: JSON.stringify(trackingData),
+        credentials: 'include'
       })
       .then(response => {
           if (!response.ok) {
