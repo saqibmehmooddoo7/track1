@@ -47,8 +47,7 @@
               'Content-Type': 'application/json'
           },
           body: JSON.stringify(trackingData),
-        credentials: 'include',
-         mode: 'no-cors'
+          mode: 'no-cors'
       })
       .then(response => {
           if (!response.ok) {
